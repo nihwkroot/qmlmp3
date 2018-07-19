@@ -1,0 +1,70 @@
+<!DOCTYPEhtml>
+<html>
+    <head>
+       <metahttp-equiv="Content-Type"content="text/html;charset=utf-8"/>
+       <scripttype="text/javascript"src="./qwebchannel.js"></script>
+       <scripttype="text/javascript">
+           //BEGINSETUP
+           functionoutput(message)
+           {
+                varoutput=document.getElementById("output");
+                output.innerHTML=output.innerHTML+message+"\n";
+           }
+
+           window.onload=function(){
+           output("settingupQWebChannel.");
+
+           newQWebChannel(qt.webChannelTransport,function(channel){
+                //makedialogobjectaccessibleglobally
+                varcontent=channel.objects.content;
+                document.getElementById("send").onclick=function(){
+                    varinput=document.getElementById("input");
+                    vartext=input.value;
+                    if(!text){
+                        return;
+                    }
+
+                    output("Sentmessage:"+text);
+                    input.value="";
+                    content.receiveText(text);
+                }
+
+                content.sendText.connect(function(message){
+                    output("Receivedmessage:"+message);
+                });
+
+                content.receiveText("Clientconnected,readytosend/receivemessages!");
+                output("ConnectedtoWebChannel,readytosend/receivemessages!");
+           });
+           }
+           //ENDSETUP
+       </script>
+
+       <styletype="text/css">
+           html{
+                height:100%;
+                width:100%;
+           }
+
+           #input{
+                width:400px;
+                margin:010px00;
+           }
+
+           #send{
+                width:90px;
+                margin:0;
+           }
+
+           #output{
+                width:500px;
+                height:300px;
+           }
+       </style>
+    </head>
+    <body>
+       <textareaid="output"></textarea><br/>
+       <inputid="input"/><inputtype="submit"id="send"value="Send"onclick="javascript:click();"/>
+    </body>
+</html>
+
